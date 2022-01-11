@@ -31,6 +31,11 @@ top_var_gene_var <- function(input_matrix, threshold) {
 
 peak_topvar <- top_var_gene_var(rlog_wRep, as.integer(dim(rlog_wRep)[1]/100))
 
+sample_cor <- cor(peak_topvar, method = "pearson")
+annotation = data.frame(factor(metaData_wRep$V6))
+rownames(annotation) = rownames(metaData_wRep)
+pheatmap(sample_cor, cluster_rows=TRUE, show_rownames=TRUE, annotation = annotation)
+
 
 ########################################################################################################################
 # do clustering using counts without replica
