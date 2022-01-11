@@ -60,20 +60,6 @@ rlog_ave_topVar <- rlog[row.names(peak_topvar),]
 rlog_ave_topVar <- sweep(rlog_ave_topVar,1, apply(rlog_ave_topVar,1,median,na.rm=T))
 dim(rlog_ave_topVar)
 
-
-library(pheatmap)
-annotation = data.frame(factor(metaData$V6))
-rownames(annotation) = rownames(metaData)
-sample_cor <- cor(rlog_ave_topVar, method = "pearson")
-pheatmap(sample_cor, cluster_rows=TRUE, show_rownames=TRUE, annotation = annotation)
-sample_cor <- cor(rlog_ave_topVar, method = "spearman")
-pheatmap(sample_cor, cluster_rows=TRUE, show_rownames=TRUE, annotation = annotation)
-# dev.off()
-
-
-rlog_ave_topVar <- rlog[row.names(peak_topvar),]
-rlog_ave_topVar <- sweep(rlog_ave_topVar,1, apply(rlog_ave_topVar,1,median,na.rm=T))
-
 # Use top 1% variable peaks from with repeats (log2(norm+1)), and then center by median for clustering
 # euclidean distance, hc, pItem anything > 0.98
 results = ConsensusClusterPlus(as.matrix(rlog_ave_topVar),maxK=6,reps=1000,pItem=0.98,
@@ -81,9 +67,6 @@ results = ConsensusClusterPlus(as.matrix(rlog_ave_topVar),maxK=6,reps=1000,pItem
                                title="consensusCluster_ave", distance='euclidean', writeTable=T,
                                clusterAlg="hc",plot="pdf",seed=42)
 
-sample_cor <- cor(rlog_ave_topVar[,c(1:40)], method = "pearson")
-dt = as.matrix(1-sample_cor)
-pheatmap(sample_cor, cluster_rows=TRUE, show_rownames=TRUE, annotation = annotation)
 
 calcRes <- calcICL(results, title = "consensusCluster_ave", plot = 'pdf')
 write.csv(calcRes$clusterConsensus, 'consensusCluster_ave/clusterConsensus.csv', quote=F, row.names = F)
